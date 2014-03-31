@@ -1,7 +1,7 @@
 /**
  * Created by linusl on 2014-03-28.
  */
-searchApp.controller('searchController', function ($scope, elasticClient) {
+searchApp.controller('searchController', function ($scope, elasticClient, utilsService) {
 
     $scope.search = function () {
 
@@ -44,7 +44,6 @@ searchApp.controller('searchController', function ($scope, elasticClient) {
 
         //var resultText = result._score + ": " + result._source.user.first_name + " " + result._source.user.last_name + ", <strong>Age: </strong>" + age(result._source.user.birthdate) + ", <strong>Town: </strong>" + result._source.user.town.name;
 
-        var resultText = "";
         var firstName = "";
         var lastName = "";
         var townName = "";
@@ -52,19 +51,19 @@ searchApp.controller('searchController', function ($scope, elasticClient) {
         if (result.highlight) {
 
             if (result.highlight.first_name) {
-                firstName = formatHighlight(result.highlight.first_name[0]);
+                firstName = utilsService.formatHighlight(result.highlight.first_name[0]);
             }
             else
                 firstName = result._source.user.first_name;
 
             if (result.highlight.last_name) {
-                lastName = formatHighlight(result.highlight.last_name[0]);
+                lastName = utilsService.formatHighlight(result.highlight.last_name[0]);
             }
             else
                 lastName = result._source.user.last_name;
 
             if (result.highlight['user.town.name'])
-                townName = formatHighlight(result.highlight['user.town.name'][0]);
+                townName = utilsService.formatHighlight(result.highlight['user.town.name'][0]);
             else
                 townName = result._source.user.town.name;
 
@@ -75,9 +74,7 @@ searchApp.controller('searchController', function ($scope, elasticClient) {
             townName = result._source.user.town.name;
         }
 
-        resultText = firstName + " " + lastName + ", " + age(result._source.user.birthdate) + " years old, in " + townName;
-
-        return resultText;
+        return firstName + " " + lastName + ", " + utilsService.age(result._source.user.birthdate) + " years old, in " + townName;
 
     };
 
@@ -90,7 +87,7 @@ searchApp.controller('searchController', function ($scope, elasticClient) {
         if (result.highlight && result.highlight['user.skill.name']) {
             var i = 0;
             do {
-                highlightedSkills = highlightedSkills + "<li>" + formatHighlight(result.highlight['user.skill.name'][i]) + "</li>";
+                highlightedSkills = highlightedSkills + "<li>" + utilsService.formatHighlight(result.highlight['user.skill.name'][i]) + "</li>";
                 if (Array.isArray(skillsArray))
                     skillsArray.remove(result.highlight['user.skill.name'][i]);
                 else
