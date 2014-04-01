@@ -14,7 +14,11 @@ var searchApp = angular.module('searchApp', [
             controller: 'searchController',
             templateUrl: 'views/jobseeker.html'
         })
-}]);;
+        .when('/skills', {
+            controller: 'skillsController',
+            templateUrl: 'views/skills.html'
+        })
+}]);
 
 // the "elasticClient" service is created by a factory-Method registered on the the module as
 // follows.
