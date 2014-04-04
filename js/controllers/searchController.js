@@ -6,16 +6,21 @@ searchApp.controller('searchController', function ($scope, elasticClient, utilsS
     $scope.search = function () {
 
         if(!$scope.queryTerm == '') {
+
             elasticClient.search({
                 index: 'duma',
                 size: 50,
                 body: {
                     "query": {
-                        "match": {
-                            _all: {
-                                "query": $scope.queryTerm,
-                                "fuzziness": "AUTO"
-                            }
+                        "multi_match": {
+                            "query": $scope.queryTerm,
+                            "fields": [
+                                "*_name",
+                                "user.skill.name",
+                                "user.skill.skillgroup.name",
+                                "user.town.name"
+                            ],
+                            "fuzziness": "AUTO"
                         }
                     },
                     "highlight": {
